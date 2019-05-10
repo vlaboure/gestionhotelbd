@@ -22,6 +22,11 @@ namespace hotel.classes
         
     }
 
+    public Client()
+    {
+
+    }
+
     public int IdClient { get => idClient; set => idClient = value; }
     public string NomClient
     {
@@ -77,9 +82,22 @@ namespace hotel.classes
             command.Dispose();
             Connexion.Instance.Close();
         }
-        public Client()
-        {
 
+        public void AffichCli()
+        {
+            Console.Clear();
+            Console.WriteLine("*********-------------Affichage de la liste des clients-----------------***********\n\n");
+            SqlCommand command = new SqlCommand("SELECT * FROM Client", Connexion.Instance);
+            Connexion.Instance.Open();
+            SqlDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                Console.WriteLine("Numero client :" + reader.GetInt32(0) + "\tNom : " + reader.GetString(1)+ "Prénom : " + reader.GetString(2)+ "Télephone : " + reader.GetString(3));
+                //Console.WriteLine();
+            }
+            reader.Close();
+            command.Dispose();
+            Connexion.Instance.Close();
         }
 
         public bool Find(string n,string p)
@@ -106,6 +124,34 @@ namespace hotel.classes
             IdClient = (int)command.ExecuteScalar();
             command.Dispose();
             Connexion.Instance.Close();
+        }
+
+        public bool DelCl(string nomCl,string prenomCl)//supprimer avec le nom
+        {   
+             if (Find(nomCl,prenomCl))//si on trouve le client
+            {
+
+                SqlCommand command = new SqlCommand("DELETE FROM Client WHERE Nom = @n and Prenom=@p", Connexion.Instance);
+                command.Parameters.Add(new SqlParameter("@n", nomCl));
+                command.Parameters.Add(new SqlParameter("@p", prenomCl));
+                Connexion.Instance.Open();
+                command.ExecuteNonQuery();
+                command.Dispose();
+                Connexion.Instance.Close();
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.WriteLine("Client " + nomCl + " supprimé");
+                Console.ResetColor();
+                return true;
+            }
+            else
+            {
+
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("CLIENT NON TROUVE");
+                Console.ResetColor();
+                return false;
+            }
+
         }
 
     }

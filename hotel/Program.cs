@@ -316,22 +316,29 @@ namespace hotel
         //-------------------- Suppression client de la base------------------
         static void DelClient()
         {
+            Client cl=new Client();
             Console.WriteLine("nom du client à supprimer :");
             string nom = Console.ReadLine();
-            if (listDesClients.DelCl(nom) != true)
+            Console.WriteLine("Prénom du client à supprimer :");
+            string prenom = Console.ReadLine();
+            if (cl.DelCl(nom,prenom) != true)
             {
                 Console.WriteLine("erreur");
             }
             else
             {
+                cl.DelCl(nom, prenom);
                 Console.ReadLine();
-                AffichCl();
+                //AffichCl();
             }
         }
 
         static void AffichCl()
         {
-            listDesClients.AffichListeCl();
+            //listDesClients.AffichListeCl();
+            //Console.ReadLine();
+            Client cli = new Client();
+            cli.AffichCli();
             Console.ReadLine();
         }
 
